@@ -74,3 +74,28 @@ or push an existing repository from the command line
 git remote add origin https://github.com/Marulanda921/ComandosSql.git
 git branch -M main
 git push -u origin main
+
+
+
+
+
+
+CREATE TABLE centros_educativos(
+id INT PRIMARY KEY AUTO_INCREMENT,
+nombre VARCHAR(40) NOT NULL,
+direccion VARCHAR(40) NOT NULL UNIQUE
+);
+
+
+--CON LLAVE FORANEA QUE ES LA QUE LLEGA DE OTRA TABLA PADRE--
+--CONSTRAIN ES EL NOMBRE DE LA RESTRICCION--
+
+CREATE TABLE estudiantes(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(40) NOT NULL,
+    apellido VARCHAR(40) NOT NULL,
+    fecha_nacimiento DATE,
+    id_centro_educativo INT,
+--constrain siempre inicia con fk y forein key y el nombre del id dentro de la tabla, y reference de donde viene con su identificador--
+    CONSTRAINT fk_centro_educativo FOREIGN KEY (id_centro_educativo) REFERENCES centros_educativos(id)
+);
