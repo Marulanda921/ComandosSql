@@ -55,3 +55,22 @@ DELETE FROM coders WHERE coders.id = 1;
 --COMANDO PARA MODIFICAR EL NOMBRE DE UN ATRIBUTO O COLUMNA--
 ALTER TABLE coders CHANGE COLUMN "nombre del atributo" nuevoNombre Tipo de dato Restricciones(opcional);
 ALTER TABLE coders CHANGE COLUMN fecha_ingreso fecha_ingresar DATE NOT NULL; 
+
+
+--…or create a new repository on the command line
+
+echo "# ComandosSql" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/Marulanda921/ComandosSql.git
+git push -u origin main
+--
+
+
+or push an existing repository from the command line
+
+git remote add origin https://github.com/Marulanda921/ComandosSql.git
+git branch -M main
+git push -u origin main
