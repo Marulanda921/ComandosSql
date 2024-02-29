@@ -186,3 +186,29 @@ select * from vigilantes;
 
 use residencia
 
+
+____________________________________________________
+
+CREATE TABLE banco (
+codigo INT UNIQUE PRIMARY KEY,
+nombre VARCHAR(30) UNIQUE,
+fecha_Fund DATE
+);
+
+
+CREATE TABLE sucursal(
+codigo int primary key,
+ubicacion varchar(35) not null,
+ciudad varchar(35) not null,
+telefono varchar(25)
+);
+
+
+
+CREATE TABLE vigilante (
+	nombre varchar(35),
+    nro_cedula varchar(10) primary key,
+    telefono varchar(25),
+    genero varchar(10),
+    salario int
+);
