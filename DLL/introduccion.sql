@@ -99,3 +99,90 @@ CREATE TABLE estudiantes(
 --constrain siempre inicia con fk y forein key y el nombre del id dentro de la tabla, y reference de donde viene con su identificador--
     CONSTRAINT fk_centro_educativo FOREIGN KEY (id_centro_educativo) REFERENCES centros_educativos(id)
 );
+
+
+
+____________________________________________________--clase 2__________________________________________
+
+CREATE TABLE conjunto (
+nit_conjunto VARCHAR(11) PRIMARY KEY,
+nombre VARCHAR(30) NOT NULL,
+estrato INT NOT NULL
+);
+
+CREATE TABLE vigilantes(
+ced_vigilante VARCHAR(10) PRIMARY KEY,
+nombre VARCHAR(30) NOT NULL,
+fecha_nac DATE,
+#validar que este campo contenga un valores especifico
+genero VARCHAR(4) CHECK(genero IN("M", "F", "Otro"))
+);
+
+
+CREATE TABLE edificios(
+id_edificio INT PRIMARY KEY AUTO_INCREMENT,
+#beetwen es un entre o un rango numero de pisos esta entre 5 a 8
+nro_de_pisos INT CHECK(nro_de_pisos BETWEEN 5 AND 8),
+ubicacion VARCHAR(40)
+#al traer un id de otra tabla tiene que tener el mismo tamaño y tipo de dato
+#id_conjuntos varchar(11),
+#constraint fk_id_conjunto foreign key(id_conjunto)
+#references conjunto(nit_conjunto)
+
+);
+
+#crear la columna
+alter table edificios add column id_conjunto varchar(11);
+
+#añadir restriccion
+alter table edificios add constraint fk_id_conjunto foreign key(id_conjunto) references conjunto(nit_conjunto);
+
+#alterar el nombre dentro de la tabla conjunto y verificar que el usuario no ingrese estos datos concretos
+ALTER TABLE conjunto
+MODIFY COLUMN nombre VARCHAR(40) NOT NULL CHECK(nombre IN("Santana", "Altos", "Montes"));
+
+#eliminar tabla completa
+drop table novedades;
+
+
+#_______________________________________________________________________________________________________________________________#
+
+CREATE TABLE novedades (
+id int auto_increment primary key,
+id_edificio int,
+id_vigilante varchar(10),
+
+constraint fk_id_edificio foreign key(id_edificio)
+references edificios(id_edificio),
+
+constraint fk_id_vigilante foreign key(id_vigilante)
+references vigilantes(ced_vigilante)
+
+);
+
+create table apartamentos (
+num_apartamento int primary key auto_increment,
+piso int not null,
+valor double check(valor between 10000 and 100000),
+id_edificio int,
+constraint fk_id_edificio2 foreign key(id_edificio)
+references edificios(id_edificio)
+);
+
+alter table edificios add column sector varchar(30) check(sector in ("Piscina", "Alameda", "Cancha"));
+#__________________________________________________________________________________________________________
+
+#INSERTAR DATOS EN TABLAS
+DESC conjunto;
+INSERT INTO conjunto VALUES("1123456", "Alejandro", 3);
+ALTER TABLE conjunto drop constraint conjunto_chk_1;
+select * from conjuntos;
+
+insert into edificios(nro_de_pisos,sector) values("6","Piscina");
+select * from edificios;
+
+insert into vigilantes values("1232123", "darcy", "22-03-1843","M");
+select * from vigilantes;
+
+use residencia
+
