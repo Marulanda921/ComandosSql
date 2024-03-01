@@ -170,7 +170,7 @@ references edificios(id_edificio)
 );
 
 alter table edificios add column sector varchar(30) check(sector in ("Piscina", "Alameda", "Cancha"));
-#__________________________________________________________________________________________________________
+#______DML____________________________________________________________________________________________________
 
 #INSERTAR DATOS EN TABLAS
 DESC conjunto;
@@ -187,7 +187,7 @@ select * from vigilantes;
 use residencia
 
 
-____________________________________________________
+___DDL_________________________________________________
 
 CREATE TABLE banco (
 codigo INT UNIQUE PRIMARY KEY,
@@ -204,7 +204,6 @@ telefono varchar(25)
 );
 
 
-
 CREATE TABLE vigilante (
 	nombre varchar(35),
     nro_cedula varchar(10) primary key,
@@ -212,3 +211,72 @@ CREATE TABLE vigilante (
     genero varchar(10),
     salario int
 );
+
+____________________--FULL DML SUBLENGUAJE PARA AFECTAR LA ESTRUCTURA DE LA BASE DE DATOS--________________________
+
+#INNER JOIN unir tabla a y b y solo trae los registros que concidan en las 2 tablas
+#Consultas de seleccion SQL
+#JOIN PARA UNIR TABLAS DE UNA BASE
+
+#INNER JOIN unir tabla a y b y solo trae los registros que concidan en las 2 tablas
+#LEFT JOIN trae toda la tabla a y no importa si coincide con la tabla b 
+#RIGHT JOIN no importa la tabla de la derecha solo la de la izquierda y no importa si coinciden los id
+#FULL JOIN coge todas las tablas solo existe en posgres y sqlServer
+
+
+
+#Seleccionar todos los datos de los clientes
+SELECT * FROM cliente
+
+#Seleccionar todos los médicos con la profesión Veterinario
+SELECT * FROM medico WHERE med_profesion = "Veterinario"
+
+#Obtener los medicamentos que tienen una m en su nombre el %m% significa que lo contenga en cuaquier parte
+#%m si inicia con m
+#si termina con m%
+#si la contiene en cualquier parte %m%
+
+SELECT * FROM medicamentos WHERE medicamentos.med_nombre LIKE '%m%';
+
+#Obtener los medicamentos que tienen su valor entre 40 y 1000
+SELECT * FROM medicamentos WHERE medicamentos.med_Valor BETWEEN 10 AND 15;
+
+#Obtener solamente el nombre de los medicamentos cuya longitud este entre 1 y 10
+#CHAR_LENGTH recibe la palabra que queremos contarle la longitud
+#colocal alias para que escriba lo que quieres AS
+SELECT medicamentos.med_nombre AS Medicamento FROM medicamentos WHERE CHAR_LENGTH(medicamentos.med_nombre) BETWEEN 1 AND 10;
+
+#Contar el número total de mascotas registradas
+#para contar COUNT(*)
+SELECT COUNT(*) AS Mascotas FROM mascotas;
+
+#Seleccionar los nombres únicos de las especializaciones
+SELECT DISTINCT especializacion.esp_nombre AS Especialidad FROM especializacion;
+
+#Listar los medicamentos ordenados por valor de forma descendente
+SELECT * FROM medicamentos ORDER BY medicamentos.med_valor DESC;
+
+#Seleccionar las citas programadas entre dos fechas 
+#BETWEEN tambien recibe fechas para poder filtrar
+SELECT * FROM citas WHERE citas.cit_fecha BETWEEN "2024-04-01" AND "2024-04-30";
+
+#Obtener el nombre de la mascota y el nombre del cliente
+SELECT mascotas.mas_nombre, cliente.cli_nombre FROM mascotas INNER JOIN cliente ON mascotas.cliente_cli_id = cliente.cli_id;
+SELECT mascotas.mas_nombre, cliente.cli_nombre FROM mascotas, cliente WHERE mascotas.cliente_cli_id = cliente.cli_id;
+
+#Listar todas las mascotas y sus historias clínicas, incluyendo las mascotas sin historias clínicas
+#saber cual es la debil y la fuerte para hacer la conexion
+SELECT mascotas.mas_nombre, historias_clinicas.his_descripcion FROM mascotas LEFT JOIN historias_clinicas ON historias_clinicas.his_id = mascotas.historias_clinicas_his_id;
+SELECT mascotas.mas_nombre, historias_clinicas.his_descripcion FROM mascotas LEFT JOIN historias_clinicas ON mascotas.historias_clinicas_his_id = historias_clinicas.his_id;
+
+#Calcular el costo total por cada tipo de servicio
+#Usar SUM
+SELECT  especializacion.esp_nombre AS Nombre_Servicio, CONCAT( "$" , SUM(servicio.ser_costo)) AS Precio_Total FROM servicio INNER JOIN especializacion ON especializacion.esp_id = servicio.especializacion_esp_id GROUP BY servicio.especializacion_esp_id;
+
+#Obtener una lista de citas con un estado 'Pendiente' o 'Realizado' basado en el valor de cit_estado
+#Casos en SQL CASE() como si fuera un Switch en javascript
+SELECT citas.cit_fecha, CASE when citas.cit_estado = 0 then "Pendiente" when citas.cit_estado = 1 then "Realizado" END AS EstadoCita FROM citas;
+
+#Obtener los nombres de las mascotas, el procedimiento del servicio que recibieron, y el nombre de su médico
+SELECT citas.cit_fecha AS Fecha,  mascotas.mas_nombre AS NombreMascota, ser_procedimiento AS Procedimiento, medico.med_nombre AS Medico FROM citas INNER JOIN mascotas ON mascotas.mas_id = citas.mascotas_mas_id
+INNER JOIN servicio ON servicio.ser_id = citas.servicio_ser_id INNER JOIN medico ON medico.med_id = citas.medico_med_id;
